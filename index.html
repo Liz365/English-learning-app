@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>እንግሊዝኛ ለባባ - ዝርዝር ማውጫ</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            text-align: center;
+            background: #fdfbf7;
+            color: #2c3e50;
+            margin: 0;
+            padding: 15px;
+        }
+        h1 { font-size: 26px; margin-bottom: 5px; color: #8e44ad; }
+        p.subtitle { font-size: 16px; color: #7f8c8d; margin-top: 0; margin-bottom: 25px; }
+
+        /* Roadmap Container stacking downward */
+        .roadmap-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        /* Module card container */
+        .module-card {
+            background: white;
+            border: 2px solid #bdc3c7;
+            border-radius: 18px;
+            padding: 0; /* Clear padding to let headers and dropboxes fill the area */
+            text-align: left;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            overflow: hidden; /* Clips expanding elements cleanly */
+            transition: all 0.3s ease;
+        }
+        
+        /* Master clickable header block inside the card */
+        .card-header {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            background: white;
+            user-select: none;
+        }
+        .card-header:active { background: #fcf8ff; }
+
+        .header-main-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .avatar-circle {
+            width: 50px;
+            height: 50px;
+            background: #e1f5fe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 2px solid #b3e5fc;
+        }
+        .title-txt-block { display: flex; flex-direction: column; }
+        .title-amh { font-size: 18px; font-weight: bold; color: #2c3e50; }
+        .title-eng { font-size: 14px; color: #7f8c8d; margin-top: 2px; }
+        .chevron { font-size: 20px; color: #95a5a6; transition: transform 0.3s ease; }
+
+        /* Embedded Content Area (Hidden by default) */
+        .card-content {
+            max-height: 0; /* Animate height safely */
+            opacity: 0;
+            padding: 0 20px;
+            background: #fafbfc;
+            border-top: 0px solid #eee;
+            transition: max-height 0.3s ease-out, opacity 0.2s ease, padding 0.3s ease;
+        }
+
+        /* Visual styling toggles when a card is selected and activated via JavaScript */
+        .module-card.active {
+            border-color: #8e44ad;
+            box-shadow: 0 6px 15px rgba(142, 68, 173, 0.15);
+        }
+        .module-card.active .card-content {
+            max-height: 1200px; /* High boundary allowance for data listings */
+            opacity: 1;
+            padding: 20px;
+            border-top: 2px dashed #f1c40f;
+        }
+        .module-card.active .chevron {
+            transform: rotate(180deg);
+            color: #8e44ad;
+        }
+
+        /* Dialogue Box Comic Bubble Layouts */
+        .bubble {
+            margin: 12px 0;
+            padding: 14px;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            transition: transform 0.1s ease;
+            display: block;
+        }
+        .bubble:active { transform: scale(0.98); }
+        .char-A { background: #e8f4fd; border-left: 5px solid #3498db; margin-right: 25px;}
+        .char-B { background: #eafaf1; border-right: 5px solid #2ecc71; margin-left: 25px; text-align: right;}
+        
+        .speaker { font-size: 11px; font-weight: bold; color: #7f8c8d; display: block; margin-bottom: 4px; }
+        .eng { font-size: 20px; color: #2c3e50; font-weight: bold; display: block; }
+        .amh { font-size: 16px; color: #555; display: block; margin-top: 4px; }
+        .listen-hint { font-size: 12px; color: #e67e22; font-style: italic; display: block; margin-top: 4px; }
+
+        /* Vocabulary row structures inside the expanding space */
+        .vocab-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 5px;
+            border-bottom: 1px solid #eef2f3;
+            cursor: pointer;
+        }
+        .vocab-row:last-child { border-bottom: none; }
+    </style>
+</head>
+<body>
+
+    <h1>የእንግሊዝኛ መማሪያ 🗺️</h1>
+    <p class="subtitle">የፈለጉትን ርዕስ በመንካት ዝርዝር ይዘቱን እዚያው ቦታ ላይ ይመልከቱ።</p>
+
+    <div class="roadmap-stack" id="accordionStack">
+        </div>
+
+    <script>
+        // Core data mirroring the 18 chapters of your graphic roadmap
+        const contentDatabase = {
+            greetings: { amh: "ሰላምታ", eng: "Greetings", icon: "👋", mode: "dialogue", data: [
+                { speaker: "አባት (Father)", eng: "Good morning! How are you?", amh: "እንደምን አደርክ? ደህና ነህ?", type: "A" },
+                { speaker: "እናት (Mother)", eng: "Good morning! I am fine, thank you.", amh: "እንደምን አደርሽ! እኔ ደህና ነኝ፣ አመሰግናለሁ።", type: "B" }
+            ]},
+            intro: { amh: "ራስን ማስተዋወቅ", eng: "Introducing Yourself", icon: "👨", mode: "dialogue", data: [
+                { speaker: "አባት (Father)", eng: "Hello, my name is Chala.", amh: "ሰላም፣ ስሜ ጫላ ይባላል።", type: "A" },
+                { speaker: "እናት (Mother)", eng: "Nice to meet you. I am Almaz.", amh: "ስላገኘሁዎት ደስ ብሎኛል። እኔ አልማዝ ነኝ።", type: "B" }
+            ]},
+            politeness: { amh: "ትህትና", eng: "Politeness", icon: "🙏", mode: "dialogue", data: [
+                { speaker: "አባት (Father)", eng: "Please help me.", amh: "እባክህ እርዳኝ።", type: "A" },
+                { speaker: "እናት (Mother)", eng: "You are welcome!", amh: "ምንም አይደለም! (እንኳን ደህና መጣህ)", type: "B" }
+            ]},
+            numbers: { amh: "ቁጥሮች 1-10", eng: "Numbers 1-10", icon: "🔢", mode: "vocab", data: [
+                { eng: "One", amh: "አንድ (1)" }, { eng: "Two", amh: "ሁለት (2)" },
+                { eng: "Three", amh: "ሦስት (3)" }, { eng: "Four", amh: "አራት (4)" },
+                { eng: "Five", amh: "አምስት (5)" }, { eng: "Six", amh: "ስድስት (6)" },
+                { eng: "Seven", amh: "ሰባት (7)" }, { eng: "Eight", amh: "ስምንት (8)" },
+                { eng: "Nine", amh: "ዘጠኝ (9)" }, { eng: "Ten", amh: "አስር (10)" }
+            ]},
+            family: { amh: "ቤተሰብ", eng: "Family", icon: "👨‍👩‍👧‍👦", mode: "vocab", data: [
+                { eng: "Father", amh: "አባት" }, { eng: "Mother", amh: "እናት" },
+                { eng: "Son", amh: "ወንድ ልጅ" }, { eng: "Daughter", amh: "ሴት ልጅ" }
+            ]},
+            house: { amh: "በቤቱ ዙሪያ", eng: "Around the House", icon: "🏠", mode: "vocab", data: [
+                { eng: "Room", amh: "ክፍል" }, { eng: "Window", amh: "መስኮት" },
+                { eng: "Door", amh: "በር" }, { eng: "Bed", amh: "አልጋ" }
+            ]},
+            food: { amh: "ምግብና መጠጥ", eng: "Food & Drink", icon: "☕", mode: "dialogue", data: [
+                { speaker: "እናት (Mother)", eng: "Would you like some coffee?", amh: "ቡና መጠጣት ይፈልጋሉ?", type: "A" },
+                { speaker: "አባት (Father)", eng: "Yes, please. Give me bread too.", amh: "አዎ እባክሽ። ዳቦም ስጪኝ።", type: "B" }
+            ]},
+            time: { amh: "ሰዓት", eng: "Time", icon: "🕒", mode: "vocab", data: [
+                { eng: "What time is it?", amh: "ሰዓቱ ስንት ነው?" },
+                { eng: "Today", amh: "ዛሬ" }, { eng: "Tomorrow", amh: "ነገ" }, { eng: "Yesterday", amh: "ትላንት" }
+            ]},
+            body: { amh: "የሰውነት ክፍሎች", eng: "Parts of the Body", icon: "🧍", mode: "vocab", data: [
+                { eng: "Head", amh: "ራስ / ጭንቅላት" }, { eng: "Eye", amh: "አይን" },
+                { eng: "Hand", amh: "እጅ" }, { eng: "Heart", amh: "ልብ" }
+            ]},
+            doctor: { amh: "ሐኪም ዘንድ", eng: "At the Doctor", icon: "⚕️", mode: "dialogue", data: [
+                { speaker: "ሐኪም (Doctor)", eng: "Where does it hurt?", amh: "የቱ ጋ ነው የሚያምዎት?", type: "A" },
+                { speaker: "አባት (Father)", eng: "My chest hurts.", amh: "ደረቴን ያመኛል።", type: "B" }
+            ]},
+            shopping: { amh: "ገበያ መገብየት", eng: "Shopping", icon: "🛒", mode: "dialogue", data: [
+                { speaker: "እናት (Mother)", eng: "How much is this?", amh: "ዋጋው ስንት ነው?", type: "A" },
+                { speaker: "ሻጭ (Seller)", eng: "It is cheap.", amh: "ርካሽ ነው።", type: "B" }
+            ]},
+            directions: { amh: "አቅጣጫ መጠየቅ", eng: "Asking Directions", icon: "🧭", mode: "dialogue", data: [
+                { speaker: "አባት (Father)", eng: "Where is the station?", amh: "ጣቢያው የት ነው?", type: "A" },
+                { speaker: "እናት (Mother)", eng: "Go straight, then turn right.", amh: "ቀጥታ ይሂዱ፣ ከዚያ ወደ ቀኝ ይታጠፉ።", type: "B" }
+            ]},
+            clothing: { amh: "ልብስ", eng: "Clothing", icon: "🧥", mode: "vocab", data: [
+                { eng: "Coat", amh: "ኮት" }, { eng: "Shoes", amh: "ጫማ" },
+                { eng: "Shirt", amh: "ሸሚዝ" }, { eng: "Dress", amh: "ቀሚስ" }
+            ]},
+            colors: { amh: "ቀለማት", eng: "Colors", icon: "🎨", mode: "vocab", data: [
+                { eng: "Red", amh: "ቀይ" }, { eng: "Blue", amh: "ሰማያዊ" },
+                { eng: "Green", amh: "አረንጓዴ" }, { eng: "White", amh: "ነጭ" }
+            ]},
+            feelings: { amh: "ስሜቶች", eng: "Feelings", icon: "😊", mode: "vocab", data: [
+                { eng: "Happy", amh: "ደስተኛ" }, { eng: "Tired", amh: "ደካማ / የደከመው" },
+                { eng: "Hungry", amh: "የራበው / መራብ" }
+            ]},
+            weather: { amh: "የአየር ንብረት", eng: "Weather", icon: "☀️", mode: "vocab", data: [
+                { eng: "Hot and Sunny", amh: "ሞቃትና ፀሐያማ" },
+                { eng: "Rain and Cold", amh: "ዝናባማና ቀዝቃዛ" }
+            ]},
+            tech: { amh: "አስፈላጊ ቴክኖሎጂ", eng: "Important Tech", icon: "📱", mode: "vocab", data: [
+                { eng: "Phone", amh: "ስልክ" }, { eng: "Television", amh: "ቴሌቪዥን" },
+                { eng: "Radio", amh: "ሬዲዮ" }
+            ]},
+            days: { amh: "የሳምንቱ ቀናት", eng: "Days of the Week", icon: "📅", mode: "vocab", data: [
+                { eng: "Monday", amh: "ሰኞ" }, { eng: "Wednesday", amh: "ረቡዕ" },
+                { eng: "Friday", amh: "አርብ" }, { eng: "Sunday", amh: "እሁድ" }
+            ]},
+            conclusion: { amh: "ማጠቃለያ", eng: "Conclusion", icon: "🎓", mode: "dialogue", data: [
+                { speaker: "እናት (Mother)", eng: "Congratulations! You speak English!", amh: "እንኳን ደስ አለዎት! አሁን እንግሊዝኛ መናገር ይችላሉ!", type: "A" },
+                { speaker: "አባት (Father)", eng: "Thank you so much!", amh: "በጣም አመሰግናለሁ!", type: "B" }
+            ]}
+        };
+
+        const stackContainer = document.getElementById("accordionStack");
+
+        // Loop through data and construct individual self-contained card drop boxes
+        Object.keys(contentDatabase).forEach(key => {
+            const item = contentDatabase[key];
+            
+            // Create overall module structural envelope
+            const card = document.createElement("div");
+            card.className = "module-card";
+            card.id = `card-${key}`;
+
+            // Create clickable upper header assembly
+            const header = document.createElement("div");
+            header.className = "card-header";
+            header.onclick = () => toggleCard(key);
+            header.innerHTML = `
+                <div class="header-main-info">
+                    <div class="avatar-circle">${item.icon}</div>
+                    <div class="title-txt-block">
+                        <span class="title-amh">${item.amh}</span>
+                        <span class="title-eng">${item.eng}</span>
+                    </div>
+                </div>
+                <div class="chevron">▼</div>
+            `;
+
+            // Create nested interior payload space
+            const content = document.createElement("div");
+            content.className = "card-content";
+
+            // Inject the data blocks directly inside this card's inner tray
+            if (item.mode === "dialogue") {
+                item.data.forEach(line => {
+                    const bubble = document.createElement("div");
+                    bubble.className = `bubble char-${line.type}`;
+                    bubble.innerHTML = `
+                        <span class="speaker">👤 ${line.speaker}</span>
+                        <span class="eng">${line.eng}</span>
+                        <span class="amh">${line.amh}</span>
+                        <span class="listen-hint">🔊 ለመስማት ይጫኑ (Tap to hear)</span>
+                    `;
+                    // Stops parent card from closing when hitting child voice bubbles
+                    bubble.onclick = (e) => { e.stopPropagation(); playAudio(line.eng); };
+                    content.appendChild(bubble);
+                });
+            } else {
+                item.data.forEach(word => {
+                    const row = document.createElement("div");
+                    row.className = "vocab-row";
+                    row.innerHTML = `
+                        <div>
+                            <span class="eng" style="font-size:19px; display:block; font-weight:bold;">${word.eng}</span>
+                            <span class="amh" style="font-size:15px; display:block; color:#555; margin-top:2px;">${word.amh}</span>
+                        </div>
+                        <div style="font-size:22px; color:#2980b9;">🔊</div>
+                    `;
+                    row.onclick = (e) => { e.stopPropagation(); playAudio(word.eng); };
+                    content.appendChild(row);
+                });
+            }
+
+            // Bind layout layers together
+            card.appendChild(header);
+            card.appendChild(content);
+            stackContainer.appendChild(card);
+        });
+
+        // Controller method to toggle card collapse/expansion states natively
+        function toggleCard(key) {
+            const targetedCard = document.getElementById(`card-${key}`);
+            const isCurrentlyActive = targetedCard.classList.contains("active");
+
+            // Close all open sections first for a clean scrolling layout experience
+            document.querySelectorAll(".module-card").forEach(c => c.classList.remove("active"));
+
+            // If the card wasn't already open, open it
+            if (!isCurrentlyActive) {
+                targetedCard.classList.add("active");
+                // Scroll the card smoothly into position
+                setTimeout(() => {
+                    targetedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 200);
+            }
+        }
+
+        // Voice Engine 
+        function playAudio(phrase) {
+            window.speechSynthesis.cancel(); 
+            let utterance = new SpeechSynthesisUtterance(phrase);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.70; 
+            window.speechSynthesis.speak(utterance);
+        }
+    </script>
+</body>
+</html>

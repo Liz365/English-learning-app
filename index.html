@@ -3,235 +3,410 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>የእንግሊዝኛ መማሪያ </title>
+    <title>የእንግሊዝኛ መማሪያ</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            text-align: center;
-            background: #fdfbf7;
-            color: #2c3e50;
-            margin: 0;
-            padding: 15px;
-        }
+        body { font-family: 'Segoe UI', Arial, sans-serif; text-align: center; background: #fdfbf7; color: #2c3e50; margin: 0; padding: 15px; }
         h1 { font-size: 26px; margin-bottom: 5px; color: #8e44ad; }
         p.subtitle { font-size: 16px; color: #7f8c8d; margin-top: 0; margin-bottom: 25px; }
-
-        /* Roadmap Container stacking downward */
-        .roadmap-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 10px;
-        }
-
-        /* Module card container */
-        .module-card {
-            background: white;
-            border: 2px solid #bdc3c7;
-            border-radius: 18px;
-            padding: 0; /* Clear padding to let headers and dropboxes fill the area */
-            text-align: left;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            overflow: hidden; /* Clips expanding elements cleanly */
-            transition: all 0.3s ease;
-        }
-        
-        /* Master clickable header block inside the card */
-        .card-header {
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            background: white;
-            user-select: none;
-        }
+        .roadmap-stack { display: flex; flex-direction: column; gap: 15px; max-width: 600px; margin: 0 auto; padding: 10px; }
+        .module-card { background: white; border: 2px solid #bdc3c7; border-radius: 18px; padding: 0; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.03); overflow: hidden; transition: all 0.3s ease; }
+        .card-header { padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: white; user-select: none; }
         .card-header:active { background: #fcf8ff; }
-
-        .header-main-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .avatar-circle {
-            width: 50px;
-            height: 50px;
-            background: #e1f5fe;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            border: 2px solid #b3e5fc;
-        }
+        .header-main-info { display: flex; align-items: center; gap: 15px; }
+        .avatar-circle { width: 50px; height: 50px; background: #e1f5fe; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2px solid #b3e5fc; }
         .title-txt-block { display: flex; flex-direction: column; }
         .title-amh { font-size: 18px; font-weight: bold; color: #2c3e50; }
         .title-eng { font-size: 14px; color: #7f8c8d; margin-top: 2px; }
         .chevron { font-size: 20px; color: #95a5a6; transition: transform 0.3s ease; }
-
-        /* Embedded Content Area (Hidden by default) */
-        .card-content {
-            max-height: 0; /* Animate height safely */
-            opacity: 0;
-            padding: 0 20px;
-            background: #fafbfc;
-            border-top: 0px solid #eee;
-            transition: max-height 0.3s ease-out, opacity 0.2s ease, padding 0.3s ease;
-        }
-
-        /* Visual styling toggles when a card is selected and activated via JavaScript */
-        .module-card.active {
-            border-color: #8e44ad;
-            box-shadow: 0 6px 15px rgba(142, 68, 173, 0.15);
-        }
-        .module-card.active .card-content {
-            max-height: 1200px; /* High boundary allowance for data listings */
-            opacity: 1;
-            padding: 20px;
-            border-top: 2px dashed #f1c40f;
-        }
-        .module-card.active .chevron {
-            transform: rotate(180deg);
-            color: #8e44ad;
-        }
-
-        /* Dialogue Box Comic Bubble Layouts */
-        .bubble {
-            margin: 12px 0;
-            padding: 14px;
-            border-radius: 15px;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-            transition: transform 0.1s ease;
-            display: block;
-        }
-        .bubble:active { transform: scale(0.98); }
-        .char-A { background: #e8f4fd; border-left: 5px solid #3498db; margin-right: 25px;}
-        .char-B { background: #eafaf1; border-right: 5px solid #2ecc71; margin-left: 25px; text-align: right;}
+        .card-content { max-height: 0; opacity: 0; padding: 0 20px; background: #fafbfc; transition: max-height 0.3s ease-out, opacity 0.2s ease, padding 0.3s ease; }
+        .module-card.active { border-color: #8e44ad; box-shadow: 0 6px 15px rgba(142, 68, 173, 0.15); }
+        .module-card.active .card-content { max-height: 4000px; opacity: 1; padding: 20px; border-top: 2px dashed #f1c40f; }
+        .module-card.active .chevron { transform: rotate(180deg); color: #8e44ad; }
         
+        .section-divider { font-size: 14px; font-weight: bold; color: #8e44ad; background: #f1f0f4; padding: 6px 12px; border-radius: 8px; margin: 15px 0 8px 0; display: inline-block; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .bubble { margin: 10px 0; padding: 14px; border-radius: 15px; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.02); transition: transform 0.1s ease; display: block; }
+        .bubble:active { transform: scale(0.98); }
+        .char-A { background: #e8f4fd; border-left: 5px solid #3498db; margin-right: 20px;}
+        .char-B { background: #eafaf1; border-right: 5px solid #2ecc71; margin-left: 20px; text-align: right;}
         .speaker { font-size: 11px; font-weight: bold; color: #7f8c8d; display: block; margin-bottom: 4px; }
-        .eng { font-size: 20px; color: #2c3e50; font-weight: bold; display: block; }
-        .amh { font-size: 16px; color: #555; display: block; margin-top: 4px; }
-        .listen-hint { font-size: 12px; color: #e67e22; font-style: italic; display: block; margin-top: 4px; }
-
-        /* Vocabulary row structures inside the expanding space */
-        .vocab-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 5px;
-            border-bottom: 1px solid #eef2f3;
-            cursor: pointer;
-        }
+        
+        .eng { font-size: 19px; color: #2c3e50; font-weight: bold; display: block; }
+        .amh { font-size: 15px; color: #555; display: block; margin-top: 4px; }
+        .listen-hint { font-size: 11px; color: #e67e22; font-style: italic; display: block; margin-top: 4px; }
+        
+        .vocab-grid { display: flex; flex-direction: column; gap: 4px; margin-top: 5px; }
+        .vocab-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 8px; border-bottom: 1px solid #eef2f3; cursor: pointer; background: white; border-radius: 8px; }
+        .vocab-row:hover { background: #fdfdfd; }
         .vocab-row:last-child { border-bottom: none; }
     </style>
 </head>
 <body>
 
-    <h1>የእንግሊዝኛ መማሪያ 🗺️</h1>
-    <p class="subtitle">የፈለጉትን ርዕስ በመንካት ዝርዝር ይዘቱን እዚያው ቦታ ላይ ይመልከቱ።</p>
+    <h1>የእንግሊዝኛ መማሪያ ፍኖተ-ካርታ 🗺️</h1>
+    <p class="subtitle">እያንዳንዱ ርዕስ ንግግሮችን (Dialogues) እና ቃላትን (Vocabulary) በውስጡ ይዟል። ለመስማት ይጫኑ!</p>
 
-    <div class="roadmap-stack" id="accordionStack">
-        </div>
+    <div class="roadmap-stack" id="accordionStack"></div>
 
     <script>
-        // Core data mirroring the 18 chapters of your graphic roadmap
         const contentDatabase = {
-            greetings: { amh: "ሰላምታ", eng: "Greetings", icon: "👋", mode: "dialogue", data: [
-                { speaker: "አባት (Father)", eng: "Good morning! How are you?", amh: "እንደምን አደርክ? ደህና ነህ?", type: "A" },
-                { speaker: "እናት (Mother)", eng: "Good morning! I am fine, thank you.", amh: "እንደምን አደርሽ! እኔ ደህና ነኝ፣ አመሰግናለሁ።", type: "B" }
-            ]},
-            intro: { amh: "ራስን ማስተዋወቅ", eng: "Introducing Yourself", icon: "👨", mode: "dialogue", data: [
-                { speaker: "አባት (Father)", eng: "Hello, my name is Chala.", amh: "ሰላም፣ ስሜ ጫላ ይባላል።", type: "A" },
-                { speaker: "እናት (Mother)", eng: "Nice to meet you. I am Almaz.", amh: "ስላገኘሁዎት ደስ ብሎኛል። እኔ አልማዝ ነኝ።", type: "B" }
-            ]},
-            politeness: { amh: "ትህትና", eng: "Politeness", icon: "🙏", mode: "dialogue", data: [
-                { speaker: "አባት (Father)", eng: "Please help me.", amh: "እባክህ እርዳኝ።", type: "A" },
-                { speaker: "እናት (Mother)", eng: "You are welcome!", amh: "ምንም አይደለም! (እንኳን ደህና መጣህ)", type: "B" }
-            ]},
-            numbers: { amh: "ቁጥሮች 1-10", eng: "Numbers 1-10", icon: "🔢", mode: "vocab", data: [
-                { eng: "One", amh: "አንድ (1)" }, { eng: "Two", amh: "ሁለት (2)" },
-                { eng: "Three", amh: "ሦስት (3)" }, { eng: "Four", amh: "አራት (4)" },
-                { eng: "Five", amh: "አምስት (5)" }, { eng: "Six", amh: "ስድስት (6)" },
-                { eng: "Seven", amh: "ሰባት (7)" }, { eng: "Eight", amh: "ስምንት (8)" },
-                { eng: "Nine", amh: "ዘጠኝ (9)" }, { eng: "Ten", amh: "አስር (10)" }
-            ]},
-            family: { amh: "ቤተሰብ", eng: "Family", icon: "👨‍👩‍👧‍👦", mode: "vocab", data: [
-                { eng: "Father", amh: "አባት" }, { eng: "Mother", amh: "እናት" },
-                { eng: "Son", amh: "ወንድ ልጅ" }, { eng: "Daughter", amh: "ሴት ልጅ" }
-            ]},
-            house: { amh: "በቤቱ ዙሪያ", eng: "Around the House", icon: "🏠", mode: "vocab", data: [
-                { eng: "Room", amh: "ክፍል" }, { eng: "Window", amh: "መስኮት" },
-                { eng: "Door", amh: "በር" }, { eng: "Bed", amh: "አልጋ" }
-            ]},
-            food: { amh: "ምግብና መጠጥ", eng: "Food & Drink", icon: "☕", mode: "dialogue", data: [
-                { speaker: "እናት (Mother)", eng: "Would you like some coffee?", amh: "ቡና መጠጣት ይፈልጋሉ?", type: "A" },
-                { speaker: "አባት (Father)", eng: "Yes, please. Give me bread too.", amh: "አዎ እባክሽ። ዳቦም ስጪኝ።", type: "B" }
-            ]},
-            time: { amh: "ሰዓት", eng: "Time", icon: "🕒", mode: "vocab", data: [
-                { eng: "What time is it?", amh: "ሰዓቱ ስንት ነው?" },
-                { eng: "Today", amh: "ዛሬ" }, { eng: "Tomorrow", amh: "ነገ" }, { eng: "Yesterday", amh: "ትላንት" }
-            ]},
-            body: { amh: "የሰውነት ክፍሎች", eng: "Parts of the Body", icon: "🧍", mode: "vocab", data: [
-                { eng: "Head", amh: "ራስ / ጭንቅላት" }, { eng: "Eye", amh: "አይን" },
-                { eng: "Hand", amh: "እጅ" }, { eng: "Heart", amh: "ልብ" }
-            ]},
-            doctor: { amh: "ሐኪም ዘንድ", eng: "At the Doctor", icon: "⚕️", mode: "dialogue", data: [
-                { speaker: "ሐኪም (Doctor)", eng: "Where does it hurt?", amh: "የቱ ጋ ነው የሚያምዎት?", type: "A" },
-                { speaker: "አባት (Father)", eng: "My chest hurts.", amh: "ደረቴን ያመኛል።", type: "B" }
-            ]},
-            shopping: { amh: "ገበያ መገብየት", eng: "Shopping", icon: "🛒", mode: "dialogue", data: [
-                { speaker: "እናት (Mother)", eng: "How much is this?", amh: "ዋጋው ስንት ነው?", type: "A" },
-                { speaker: "ሻጭ (Seller)", eng: "It is cheap.", amh: "ርካሽ ነው።", type: "B" }
-            ]},
-            directions: { amh: "አቅጣጫ መጠየቅ", eng: "Asking Directions", icon: "🧭", mode: "dialogue", data: [
-                { speaker: "አባት (Father)", eng: "Where is the station?", amh: "ጣቢያው የት ነው?", type: "A" },
-                { speaker: "እናት (Mother)", eng: "Go straight, then turn right.", amh: "ቀጥታ ይሂዱ፣ ከዚያ ወደ ቀኝ ይታጠፉ።", type: "B" }
-            ]},
-            clothing: { amh: "ልብስ", eng: "Clothing", icon: "🧥", mode: "vocab", data: [
-                { eng: "Coat", amh: "ኮት" }, { eng: "Shoes", amh: "ጫማ" },
-                { eng: "Shirt", amh: "ሸሚዝ" }, { eng: "Dress", amh: "ቀሚስ" }
-            ]},
-            colors: { amh: "ቀለማት", eng: "Colors", icon: "🎨", mode: "vocab", data: [
-                { eng: "Red", amh: "ቀይ" }, { eng: "Blue", amh: "ሰማያዊ" },
-                { eng: "Green", amh: "አረንጓዴ" }, { eng: "White", amh: "ነጭ" }
-            ]},
-            feelings: { amh: "ስሜቶች", eng: "Feelings", icon: "😊", mode: "vocab", data: [
-                { eng: "Happy", amh: "ደስተኛ" }, { eng: "Tired", amh: "ደካማ / የደከመው" },
-                { eng: "Hungry", amh: "የራበው / መራብ" }
-            ]},
-            weather: { amh: "የአየር ንብረት", eng: "Weather", icon: "☀️", mode: "vocab", data: [
-                { eng: "Hot and Sunny", amh: "ሞቃትና ፀሐያማ" },
-                { eng: "Rain and Cold", amh: "ዝናባማና ቀዝቃዛ" }
-            ]},
-            tech: { amh: "አስፈላጊ ቴክኖሎጂ", eng: "Important Tech", icon: "📱", mode: "vocab", data: [
-                { eng: "Phone", amh: "ስልክ" }, { eng: "Television", amh: "ቴሌቪዥን" },
-                { eng: "Radio", amh: "ሬዲዮ" }
-            ]},
-            days: { amh: "የሳምንቱ ቀናት", eng: "Days of the Week", icon: "📅", mode: "vocab", data: [
-                { eng: "Monday", amh: "ሰኞ" }, { eng: "Wednesday", amh: "ረቡዕ" },
-                { eng: "Friday", amh: "አርብ" }, { eng: "Sunday", amh: "እሁድ" }
-            ]},
-            conclusion: { amh: "ማጠቃለያ", eng: "Conclusion", icon: "🎓", mode: "dialogue", data: [
-                { speaker: "እናት (Mother)", eng: "Congratulations! You speak English!", amh: "እንኳን ደስ አለዎት! አሁን እንግሊዝኛ መናገር ይችላሉ!", type: "A" },
-                { speaker: "አባት (Father)", eng: "Thank you so much!", amh: "በጣም አመሰግናለሁ!", type: "B" }
-            ]}
+            greetings: { amh: "ሰላምታ", eng: "Greetings & Basics", icon: "👋", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "Good morning! How are you today?", amh: "እንደምን አደርክ? ዛሬ ደህና ነህ?", type: "A" },
+                    { speaker: "እናት (Mother)", eng: "Good morning! I am very well, thank you. And you?", amh: "እንደምን አደርሽ! እኔ በጣም ደህና ነኝ፣ አመሰግናለሁ። አንተስ?", type: "B" },
+                    { speaker: "አባት (Father)", eng: "I am fine too. Have a wonderful day!", amh: "እኔም ደህና ነኝ። መልካም ቀን ይሁንልህ!", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Hello / Hi", amh: "ሰላም" }, { eng: "Good afternoon", amh: "እንደምን ዋልክ" },
+                    { eng: "Good evening", amh: "እንደምን አመሸህ" }, { eng: "Goodbye", amh: "ደህና ሰንብት / በደህና ቆይ" },
+                    { eng: "Thank you", amh: "አመሰግናለሁ" }, { eng: "Please", amh: "እባክህ / እባክሽ" }
+                ]
+            },
+            intro: { amh: "ራስን ማስተዋወቅ", eng: "Introducing Yourself", icon: "👨", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "Hello, my name is Chala. I am from Ethiopia.", amh: "ሰላም፣ ስሜ ጫላ ይባላል። የመጣሁት ከኢትዮጵያ ነው።", type: "A" },
+                    { speaker: "ጎረቤት (Neighbor)", eng: "Nice to meet you, Chala. Where do you live now?", amh: "ስላገኘሁህ ደስ ብሎኛል ጫላ። አሁን የት ነው የምትኖረው?", type: "B" },
+                    { speaker: "አባት (Father)", eng: "I live in California with my family.", amh: "ካሊፎርኒያ ውስጥ ከቤተሰቤ ጋር እኖራለሁ።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Name", amh: "ስም" }, { eng: "Country", amh: "ሀገር" },
+                    { eng: "Family", amh: "ቤተሰብ" }, { eng: "City", amh: "ከተማ" },
+                    { eng: "Age", amh: "ዕድሜ" }, { eng: "Friend", amh: "ጓደኛ" }
+                ]
+            },
+            politeness: { amh: "ትህትና", eng: "Politeness & Help", icon: "🙏", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "Excuse me, can you please help me with this?", amh: "ይቅርታ፣ እባክህ በዚህ ነገር ልትረዳኝ ትችላለህ?", type: "A" },
+                    { speaker: "እናት (Mother)", eng: "Of course! What can I do for you?", amh: "በደስታ! ምን ላድርግልዎት?", type: "B" },
+                    { speaker: "አባት (Father)", eng: "Thank you so much. You are very kind.", amh: "በጣም አመሰግናለሁ። በጣም ደግ ነዎት።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Excuse me", amh: "ይቅርታ (ትኩረት ለመሳብ)" }, { eng: "I am sorry", amh: "አዝናለሁ / ይቅርታ" },
+                    { eng: "You are welcome", amh: "ምንም አይደለም / እንኳን ደህና መጡ" }, { eng: "Help", amh: "እርዳታ / መርዳት" },
+                    { eng: "Kind", amh: "ደግ / ሩህሩህ" }, { eng: "No problem", amh: "ችግር የለውም" }
+                ]
+            },
+            family: { amh: "ቤተሰብና የልጅ ልጆች", eng: "Family & Grandchildren", icon: "👨‍👩‍👧‍👦", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "Come here, my grandchild! How was school?", amh: "እንዲህ ና የኔ ልጅ ልጅ! ትምህርት ቤት እንዴት ነበር?", type: "A" },
+                    { speaker: "ልጅ (Child)", eng: "It was great, Grandpa! We played outside.", amh: "በጣም አሪፍ ነበር አያቴ! ውጪ ተጫወትን።", type: "B" },
+                    { speaker: "አባት (Father)", eng: "Wonderful. Go wash your hands before dinner.", amh: "ግሩም ነው። ከእራት በፊት እጅህን ታጠብ።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Grandfather (Grandpa)", amh: "አያት (ወንድ)" }, { eng: "Grandmother (Grandma)", amh: "አያት (ሴት)" },
+                    { eng: "Grandchild", amh: "የልጅ ልጅ" }, { eng: "Son and Daughter", amh: "ወንድ ልጅ እና ሴት ልጅ" },
+                    { eng: "Brother and Sister", amh: "ወንድም እና እህት" }, { eng: "Children", amh: "ልጆች" }
+                ]
+            },
+            airport: { amh: "በአውሮፕላን ማረፊያ", eng: "At the Airport", icon: "✈️", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "Excuse me, where is the gate for this flight?", amh: "ይቅርታ፣ የዚህ በረራ መውጫ (ጌት) የት ነው?", type: "A" },
+                    { speaker: "ሰራተኛ (Officer)", eng: "Please show me your passport and boarding pass.", amh: "እባክዎ ፓስፖርትዎን እና የመሳፈሪያ ወረቀትዎን ያሳዩኝ።", type: "B" },
+                    { speaker: "አባት (Father)", eng: "Here they are. I have one carry-on bag.", amh: "ይኸውልዎት። አንድ በእጅ የሚይዙት ቦርሳ አለኝ።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Passport", amh: "ፓስፖርት" }, { eng: "Ticket / Boarding pass", amh: "ቲኬት / የመሳፈሪያ ወረቀት" },
+                    { eng: "Luggage / Suitcase", amh: "ሻንጣ / ጓዝ" }, { eng: "Flight", amh: "በረራ" },
+                    { eng: "Gate", amh: "መውጫ በር" }, { eng: "Airplane", amh: "አውሮፕላን" }
+                ]
+            },
+            doctor: { amh: "ሐኪም ዘንድ", eng: "At the Doctor", icon: "⚕️", 
+                dialogue: [
+                    { speaker: "ሐኪም (Doctor)", eng: "Hello, where does it hurt today?", amh: "ጤና ይስጥልኝ፣ ዛሬ የቱ ጋ ነው የሚያምዎት?", type: "A" },
+                    { speaker: "አባት (Father)", eng: "My chest feels heavy and I have a bad headache.", amh: "ደረቴን ከበድ ይለኛል ደግሞም በጣም ራሴን ያመኛል።", type: "B" },
+                    { speaker: "ሐኪም (Doctor)", eng: "Rest well and take this medicine twice a day.", amh: "በደንብ ያርፉ እና ይህንን መድሃኒት በቀን ሁለት ጊዜ ይውሰዱ።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Doctor", amh: "ሐኪም / ዶክተር" }, { eng: "Medicine / Pill", amh: "መድሃኒት / ክኒን" },
+                    { eng: "Pain / Hurt", amh: "ህመም / ማመም" }, { eng: "Headache", amh: "የራስ ምታት" },
+                    { eng: "Fever", amh: "ትኩሳት" }, { eng: "Cough", amh: "ሳል" }
+                ]
+            },
+            pharmacy: { amh: "መድሃኒት ቤት", eng: "At the Pharmacy", icon: "💊", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "Hello, I need to pick up my prescription, please.", amh: "ሰላም፣ የታዘዘልኝን መድሃኒት ለመውሰድ ፈልጌ ነበር።", type: "A" },
+                    { speaker: "ፋርማሲስት (Pharmacist)", eng: "Sure. Take this pill after meals with water.", amh: "እሺ። ይህንን ክኒን ከምግብ በኋላ በውሃ ይውሰዱት።", type: "B" },
+                    { speaker: "አባት (Father)", eng: "Are there any side effects?", amh: "የሚያስከትለው ሌላ ችግር (ሳይድ ኢፌክት) አለ?", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Prescription", amh: "የሀኪም ማዘዣ" }, { eng: "Pharmacist", amh: "የመድሃኒት ባለሙያ" },
+                    { eng: "Ointment / Cream", amh: "ቅባት / ቅባት መድሃኒት" }, { eng: "Vitamins", amh: "ቪታሚኖች" },
+                    { eng: "Allergy", amh: "አለርጂ" }, { eng: "Daily", amh: "በየቀኑ" }
+                ]
+            },
+            food: { amh: "ምግብና መጠጥ", eng: "Food & Dining", icon: "☕", 
+                dialogue: [
+                    { speaker: "አስተናጋጅ (Waiter)", eng: "Welcome! What would you like to order?", amh: "እንኳን ደህና መጡ! ምን ማዘዝ ይፈልጋሉ?", type: "A" },
+                    { speaker: "አባት (Father)", eng: "I would like hot coffee with milk and fresh bread.", amh: "ትኩስ ቡና በወተት እና ትኩስ ዳቦ እፈልጋለሁ።", type: "B" },
+                    { speaker: "አስተናጋጅ (Waiter)", eng: "Excellent choice. I will bring it right away.", amh: "በጣም ጥሩ ምርጫ። አሁኑኑ አመጣዋለሁ።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Breakfast", amh: "ቁርስ" }, { eng: "Lunch", amh: "ምሳ" },
+                    { eng: "Dinner", amh: "እራት" }, { eng: "Coffee and Tea", amh: "ቡና እና ሻይ" },
+                    { eng: "Water", amh: "ውሃ" }, { eng: "Bread and Meat", amh: "ዳቦ እና ሥጋ" }
+                ]
+            },
+            banking: { amh: "ባንክ ቤት", eng: "At the Bank", icon: "💰", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "Hello, I want to deposit this check into my account.", amh: "ሰላም፣ ይህንን ቼክ ወደ አካውንቴ ማስገባት እፈልጋለሁ።", type: "A" },
+                    { speaker: "ሰራተኛ (Teller)", eng: "Please sign the back and show me your ID.", amh: "እባክዎ የቼኩን ጀርባ ይፈርሙና መታወቂያዎን ያሳዩኝ።", type: "B" },
+                    { speaker: "አባት (Father)", eng: "Here is my identification card. Thank you.", amh: "መታወቂያ ካርዴ ይኸውልህ። አመሰግናለሁ።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Bank account", amh: "የባንክ አካውንት" }, { eng: "Check", amh: "ቼክ" },
+                    { eng: "Deposit", amh: "ገንዘብ ማስገባት" }, { eng: "Withdraw", amh: "ገንዘብ ማውጣት" },
+                    { eng: "Cash", amh: "ጥሬ ገንዘብ" }, { eng: "ID Card", amh: "መታወቂያ ካርድ" }
+                ]
+            },
+            shopping: { amh: "ገበያ መገብየት", eng: "Grocery Shopping", icon: "🛒", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "Excuse me, how much is this bag of apples?", amh: "ይቅርታ፣ ይህ የአፕል ከረጢት ዋጋው ስንት ነው?", type: "A" },
+                    { speaker: "ሰራተኛ (Seller)", eng: "It is four dollars and fifty cents.", amh: "አራት ዶላር ከሃምሳ ሳንቲም ነው።", type: "B" },
+                    { speaker: "አባት (Father)", eng: "Great, I will take it. Where are the fresh eggs?", amh: "ጥሩ፣ እወስደዋለሁ። ትኩስ እንቁላሎች የት ነው ያሉት?", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Price / Cost", amh: "ዋጋ" }, { eng: "Receipt", amh: "ደረሰኝ" },
+                    { eng: "Store / Shop", amh: "ሱቅ / መደብር" }, { eng: "Fruit and Vegetable", amh: "ፍራፍሬ እና አትክልት" },
+                    { eng: "Eggs and Milk", amh: "እንቁላል እና ወተት" }, { eng: "Expensive / Cheap", amh: "ውድ / ርካሽ" }
+                ]
+            },
+            directions: { amh: "አቅጣጫ መጠየቅ", eng: "Asking Directions", icon: "🧭", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "Excuse me, where is the nearest bus station?", amh: "ይቅርታ፣ በአቅራቢያው ያለው የባስ ጣቢያ የት ነው?", type: "A" },
+                    { speaker: "እናት (Mother)", eng: "Go straight and turn right at the corner.", amh: "ቀጥታ ይሂዱና ማዕዘኑ ላይ ወደ ቀኝ ይታጠፉ።", type: "B" },
+                    { speaker: "አባት (Father)", eng: "Is it close enough to walk?", amh: "ለመራመድ ቅርብ ነው?", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Left and Right", amh: "ግራ እና ቀኝ" }, { eng: "Straight", amh: "ቀጥታ" },
+                    { eng: "Turn", amh: "መታጠፍ" }, { eng: "Street / Road", amh: "መንገድ" },
+                    { eng: "Bus / Train station", amh: "የባስ / የባቡር ጣቢያ" }, { eng: "Far / Near", amh: "ሩቅ / ቅርብ" }
+                ]
+            },
+            post_office: { amh: "ፖስታ ቤት", eng: "At the Post Office", icon: "📦", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "Hello, I want to send this package to Ethiopia.", amh: "ሰላም፣ ይህንን እሽግ ወደ ኢትዮጵያ መላክ እፈልጋለሁ።", type: "A" },
+                    { speaker: "ሰራተኛ (Clerk)", eng: "Put it on the scale, please. It weighs two pounds.", amh: "እባክዎ ሚዛኑ ላይ ያስቀምጡት። ሁለት ፓውንድ ይመዝናል።", type: "B" },
+                    { speaker: "አባት (Father)", eng: "How many days will it take to arrive?", amh: "ለመድረስ ስንት ቀን ይወስዳል?", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Package / Parcel", amh: "እሽግ / እቃ" }, { eng: "Letter / Envelope", amh: "ደብዳቤ / ኤንቨሎፕ" },
+                    { eng: "Stamp", amh: "ስታምፕ / ማህተም" }, { eng: "Address", amh: "አድራሻ" },
+                    { eng: "Scale / Weigh", amh: "ሚዛን / መመዘን" }, { eng: "Mailbox", amh: "የፖስታ ሳጥን" }
+                ]
+            },
+            emergencies: { amh: "አስቸኳይ ሁኔታ", eng: "Emergency Help", icon: "🚨", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "Help! Please call an ambulance immediately!", amh: "እርዱኝ! እባካችሁ አምቡላንስ አሁኑኑ ጥሩ!", type: "A" },
+                    { speaker: "እናት (Mother)", eng: "I am calling nine-one-one right now. Stay calm.", amh: "አሁኑኑ ወደ 911 እየደወልኩ ነው። ተረጋጉ።", type: "B" },
+                    { speaker: "አባት (Father)", eng: "Thank you. An old man fell down and cannot move.", amh: "አመሰግናለሁ። አንድ አዛውንት ወድቀው መንቀሳቀስ አልቻሉም።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Ambulance", amh: "አምቡላንስ" }, { eng: "Police", amh: "ፖሊስ" },
+                    { eng: "Fire", amh: "እሳት" }, { eng: "Hospital", amh: "ሆስፒታል" },
+                    { eng: "Danger", amh: "አደጋ" }, { eng: "Quickly / Fast", amh: "በፍጥነት / ቶሎ" }
+                ]
+            },
+            home_emergency: { amh: "የቤት ውስጥ አደጋ", eng: "Emergency at Home", icon: "🛠️", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "There is a water leak in the kitchen! The floor is wet.", amh: "ኩሽና ውስጥ የውሃ ፍሳሽ አለ! ወለሉ ርሷል።", type: "A" },
+                    { speaker: "እናት (Mother)", eng: "Turn off the main water valve right away.", amh: "ዋናውን የውሃ መዝጊያ ቫልቭ አሁኑኑ ዝጋው።", type: "B" },
+                    { speaker: "አባት (Father)", eng: "I closed it. We need to call a repairman.", amh: "ዘጋሁት። የጥገና ሰራተኛ መጥራት አለብን።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Water leak", amh: "የውሃ ፍሳሽ" }, { eng: "Pipe", amh: "ቧንቧ" },
+                    { eng: "Plumber / Repairman", amh: "የቧንቧ ሰራተኛ / ጥገና ሰራተኛ" }, { eng: "Valve", amh: "ቫልቭ / መዝጊያ" },
+                    { eng: "Flood / Wet", amh: "መጥለቅለቅ / የረጠበ" }, { eng: "Broken", amh: "የተሰበረ / የተበላሸ" }
+                ]
+            },
+            numbers: { amh: "ቁጥሮች 1-100", eng: "Useful Numbers", icon: "🔢", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "Can you count from one to ten, please?", amh: "እባክህ ከአንድ እስከ አስር ቁጠርልኝ?", type: "A" },
+                    { speaker: "ልጅ (Child)", eng: "Yes! One, two, three, four, five, six, seven, eight, nine, ten!", amh: "አዎ! አንድ፣ ሁለት፣ ሦስት፣ አራት፣ አምስት፣ ስድስት፣ ሰባት፣ ስምንት፣ ዘጠኝ፣ አስር!", type: "B" },
+                    { speaker: "አባት (Father)", eng: "Great job! What comes after twenty?", amh: "ጎበዝ! ከሃያ በኋላ ምን ይመጣል?", type: "A" }
+                ],
+                vocab: [
+                    { eng: "One / Two / Three", amh: "አንድ / ሁለት / ሦስት" }, { eng: "Four / Five / Six", amh: "አራት / አምስት / ስድስት" },
+                    { eng: "Seven / Eight / Nine / Ten", amh: "ሰባት / ስምንት / ዘጠኝ / አስር" }, { eng: "Twenty / Thirty", amh: "ሃያ / ሰላሳ" },
+                    { eng: "Forty / Fifty", amh: "አርባ / ሃምሳ" }, { eng: "One Hundred", amh: "አንድ መቶ" }
+                ]
+            },
+            house: { amh: "በቤቱ ዙሪያ", eng: "Around the House", icon: "🏠", 
+                dialogue: [
+                    { speaker: "እናት (Mother)", eng: "Where are my glasses? Are they in the living room?", amh: "መነፅሬ የት ነው? ሳሎን ውስጥ ነው?", type: "A" },
+                    { speaker: "አባት (Father)", eng: "No, they are on the kitchen table next to the keys.", amh: "አይደለም፣ ኩሽና ጠረጴዛው ላይ ከቁልፎቹ አጠገብ ናቸው።", type: "B" },
+                    { speaker: "እናት (Mother)", eng: "Thank you. I will go get them.", amh: "አመሰግናለሁ። ሄጄ አመጣቸዋለሁ።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Living room", amh: "ሳሎን" }, { eng: "Kitchen", amh: "ወጥ ቤት / ኩሽና" },
+                    { eng: "Bedroom", amh: "መኝታ ክፍል" }, { eng: "Bathroom", amh: "መታጠቢያ ቤት" },
+                    { eng: "Table and Chair", amh: "ጠረጴዛ እና ወንበር" }, { eng: "Key and Lock", amh: "ቁልፍ እና መቆለፊያ" }
+                ]
+            },
+            gardening: { amh: "አትክልት መንከባከብ", eng: "Gardening Terms", icon: "🌱", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "The soil is dry. I need to water the plants today.", amh: "አፈሩ ደርቋል። ዛሬ አትክልቶቹን ማጠጣት አለብኝ።", type: "A" },
+                    { speaker: "ጎረቤት (Neighbor)", eng: "Your flowers look beautiful. What seeds did you use?", amh: "አበቦችህ በጣም ያምራሉ። ምን ዓይነት ዘር ተጠቀምክ?", type: "B" },
+                    { speaker: "አባት (Father)", eng: "I planted fruit trees and vegetable seeds last month.", amh: "ባለፈው ወር የፍራፍሬ ዛፎችን እና የአትክልት ዘሮችን ተከልኩ።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Soil / Earth", amh: "አፈር" }, { eng: "Water the plants", amh: "አትክልት ማጠጣት" },
+                    { eng: "Seeds / Flowers", amh: "ዘሮች / አበባዎች" }, { eng: "Vegetable garden", amh: "የአትክልት ቦታ" },
+                    { eng: "Fruit tree", amh: "የፍራፍሬ ዛፍ" }, { eng: "Shovel / Tools", amh: "አካፋ / የስራ ዕቃዎች" }
+                ]
+            },
+            farming: { amh: "የአየር ሁኔታና እርሻ", eng: "Weather & Farming", icon: "🚜", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "The rain is good for the crops this season.", amh: "በዚህ ወቅት ዝናቡ ለሰብሉ ጥሩ ነው።", type: "A" },
+                    { speaker: "ጎረቤት (Neighbor)", eng: "Yes, the harvest time will be very successful.", amh: "አዎ፣ የመከር ወቅት (ምርት መሰብሰቢያው) በጣም ስኬታማ ይሆናል።", type: "B" },
+                    { speaker: "አባት (Father)", eng: "We have very good, rich soil here.", amh: "እዚህ በጣም ጥሩና ለም አፈር አለን።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Heavy rain", amh: "ኃይለኛ ዝናብ" }, { eng: "Dry season", amh: "በጋ / ደረቅ ወቅት" },
+                    { eng: "Harvest time", amh: "የመከር ወቅት / ምርት መሰብሰብ" }, { eng: "Crop / Grain", amh: "ሰብል / እህል" },
+                    { eng: "Planting season", amh: "የመዝሪያ ወቅት" }, { eng: "Rich soil", amh: "ለም አፈር" }
+                ]
+            },
+            time: { amh: "ሰዓትና ቀናት", eng: "Time & Calendar", icon: "🕒", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "Excuse me, do you know what time it is?", amh: "ይቅርታ፣ ሰዓቱ ስንት እንደሆነ ታውቃለህ?", type: "A" },
+                    { speaker: "እናት (Mother)", eng: "It is exactly three o'clock in the afternoon.", amh: "በትክክል ከሰዓት በኋላ ዘጠኝ (3) ሰዓት ነው።", type: "B" },
+                    { speaker: "አባት (Father)", eng: "Thank you. I have an appointment tomorrow morning.", amh: "አመሰግናለሁ። ነገ ጠዋት ቀጠሮ አለኝ።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Morning", amh: "ጠዋት" }, { eng: "Afternoon", amh: "ከሰዓት በኋላ" },
+                    { eng: "Night", amh: "ማታ" }, { eng: "Today / Tomorrow", amh: "ዛሬ / ነገ" },
+                    { eng: "Yesterday", amh: "ትላንት" }, { eng: "Next week", amh: "የሚቀጥለው ሳምንት" }
+                ]
+            },
+            body: { amh: "የሰውነት ክፍሎች", eng: "Parts of the Body", icon: "🧍", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "My leg hurts when I walk too long.", amh: "በጣም ረጅም ጊዜ ስራመድ እግሬን ያመኛል።", type: "A" },
+                    { speaker: "እናት (Mother)", eng: "Sit down and point to where it hurts.", amh: "እባክህ ተቀመጥና የቱ ጋ እንደሚያምህ አሳየኝ።", type: "B" },
+                    { speaker: "አባት (Father)", eng: "It hurts right here around my foot.", amh: "ልክ እዚህ እግሬ አካባቢ ያመኛል።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Head and Hair", amh: "ራስ እና ፀጉር" }, { eng: "Eyes and Ears", amh: "አይኖች እና ጆሮዎች" },
+                    { eng: "Nose and Mouth", amh: "አፍንጫ እና አፍ" }, { eng: "Chest and Heart", amh: "ደረት እና ልብ" },
+                    { eng: "Stomach", amh: "ሆድ" }, { eng: "Hand and Leg", amh: "እጅ እና እግር" }
+                ]
+            },
+            clothing: { amh: "ልብስ", eng: "Clothing Items", icon: "🧥", 
+                dialogue: [
+                    { speaker: "እናት (Mother)", eng: "It is cold outside. Wear a heavy coat and a hat.", amh: "ውጭ ይቀዘቅዛል። ከባድ ኮት እና ቆብ አድርግ።", type: "A" },
+                    { speaker: "አባት (Father)", eng: "Where is my blue scarf? I cannot find it.", amh: "ሰማያዊ ሻርፌ የት ነው? ላገኘው አልቻልኩም።", type: "B" },
+                    { speaker: "እናት (Mother)", eng: "It is in the closet next to your shoes.", amh: "ቁምሳጥኑ ውስጥ ከጫማዎችህ አጠገብ ነው።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Coat / Jacket", amh: "ኮት / ጃኬት" }, { eng: "Shirt / Pants", amh: "ሸሚዝ / ሱሪ" },
+                    { eng: "Shoes / Socks", amh: "ጫማ / ካልሲ" }, { eng: "Hat / Cap", amh: "ባርኔጣ / ቆብ" },
+                    { eng: "Scarf", amh: "ሻርፕ / ነጠላ" }, { eng: "Dress", amh: "ቀሚስ" }
+                ]
+            },
+            colors: { amh: "ቀለማት", eng: "Colors", icon: "🎨", 
+                dialogue: [
+                    { speaker: "ልጅ (Child)", eng: "Grandpa, look at my new drawing! I used many colors.", amh: "አያቴ፣ አዲሱን ስዕሌን እይ! ብዙ ቀለሞችን ተጠቀምኩ።", type: "A" },
+                    { speaker: "አባት (Father)", eng: "Beautiful! This red car and green tree look great.", amh: "በጣም ያምራል! ይህ ቀይ መኪና እና አረንጓዴ ዛፍ አሪፍ ናቸው።", type: "B" },
+                    { speaker: "ልጅ (Child)", eng: "My favorite color is blue like the sky.", amh: "እኔ የምወደው ቀለም እንደ ሰማይ ሰማያዊ ነው።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Red", amh: "ቀይ" }, { eng: "Blue", amh: "ሰማያዊ" },
+                    { eng: "Green", amh: "አረንጓዴ" }, { eng: "White / Black", amh: "ነጭ / ጥቁር" },
+                    { eng: "Yellow", amh: "ቢጫ" }, { eng: "Brown", amh: "ቡናማ" }
+                ]
+            },
+            feelings: { amh: "ስሜቶች", eng: "Feelings & Emotions", icon: "😊", 
+                dialogue: [
+                    { speaker: "እናት (Mother)", eng: "You look tired. Did you sleep well last night?", amh: "የደከመህ ትመስላለህ። ትላንት ማታ በደንብ ተኛህ?", type: "A" },
+                    { speaker: "አባት (Father)", eng: "No, but I am happy because our family is visiting today.", amh: "አልተኛሁም፣ ግን ዛሬ ቤተሰቦቻችን ስለሚጠይቁን ደስተኛ ነኝ።", type: "B" },
+                    { speaker: "እናት (Mother)", eng: "Wonderful. Let me know if you get hungry.", amh: "ግሩም ነው። ከራበህ ንገረኝ።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Happy / Glad", amh: "ደስተኛ" }, { eng: "Tired / Exhausted", amh: "የደከመው" },
+                    { eng: "Hungry", amh: "የራበው" }, { eng: "Thirsty", amh: "የጠማው" },
+                    { eng: "Sick / Unwell", amh: "የታመመ" }, { eng: "Sleepy", amh: "እንቅልፍ የመጣው" }
+                ]
+            },
+            weather: { amh: "የአየር ንብረት", eng: "Weather & Nature", icon: "☀️", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "It is very hot and sunny today.", amh: "ዛሬ በጣም ሞቃትና ፀሐያማ ነው።", type: "A" },
+                    { speaker: "እናት (Mother)", eng: "Yes, but the news says it will be rainy and cold tomorrow.", amh: "አዎ፣ ግን ዜናው ነገ ዝናባማና ቀዝቃዛ ይሆናል ይላል።", type: "B" },
+                    { speaker: "አባት (Father)", eng: "Then I will stay inside and watch television.", amh: "እንግዲያውስ እቤት እቆያለሁ ቴሌቪዥን እያየሁ።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Hot / Sunny", amh: "ሞቃት / ፀሐያማ" }, { eng: "Rainy / Wet", amh: "ዝናባማ" },
+                    { eng: "Cold / Windy", amh: "ቀዝቃዛ / ንፋስ የበዛበት" }, { eng: "Cloudy", amh: "ደመናማ" },
+                    { eng: "Sun and Moon", amh: "ፀሐይ እና ጨረቃ" }, { eng: "Sky and Clouds", amh: "ሰማይ እና ደመና" }
+                ]
+            },
+            tech: { amh: "ቴክኖሎጂ", eng: "Important Tech", icon: "📱", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "Can you help me connect my mobile phone to the Wi-Fi?", amh: "ሞባይል ስልኬን ከዋይፋይ ጋር ላገናኘው ልትረዳኝ ትችላለህ?", type: "A" },
+                    { speaker: "ልጅ (Child)", eng: "Yes, Grandpa. Let me type the password for you.", amh: "አዎ አያቴ። የይለፍ ቃሉን (ፓስዎርድ) ልጻፍልህ።", type: "B" },
+                    { speaker: "አባት (Father)", eng: "Thank you. Call me if your mother sends a text message.", amh: "አመሰግናለሁ። እናትህ የጽሑፍ መልዕክት ከላከች ጥራኝ።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Mobile Phone", amh: "ስልክ / ሞባይል" }, { eng: "Television / Radio", amh: "ቴሌቪዥን / ሬዲዮ" },
+                    { eng: "Computer / Charger", amh: "ኮምፒውተር / ቻርጀር" }, { eng: "Internet / Wi-Fi", amh: "ኢንተርኔት / ዋይፋይ" },
+                    { eng: "Text Message", amh: "የጽሑፍ መልዕክት" }, { eng: "Password", amh: "የይለፍ ቃል" }
+                ]
+            },
+            days: { amh: "የሳምንቱ ቀናት", eng: "Days of the Week", icon: "📅", 
+                dialogue: [
+                    { speaker: "እናት (Mother)", eng: "Do we have church on Sunday morning?", amh: "እሁድ ጠዋት ቤተክርስቲያን መሄድ አለብን?", type: "A" },
+                    { speaker: "አባት (Father)", eng: "Yes, and on Monday I need to go to the bank.", amh: "አዎ፣ ሰኞ ዕለት ደግሞ ባንክ ቤት መሄድ አለብኝ።", type: "B" },
+                    { speaker: "እናት (Mother)", eng: "Perfect. We can rest over the weekend.", amh: "በጣም ጥሩ። ቅዳሜና እሁድ (ዊኬንድ) ላይ ማረፍ እንችላለን።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Monday / Tuesday", amh: "ሰኞ / ማክሰኞ" }, { eng: "Wednesday / Thursday", amh: "ረቡዕ / ሐሙስ" },
+                    { eng: "Friday", amh: "አርብ" }, { eng: "Saturday / Sunday", amh: "ቅዳሜ / እሁድ" },
+                    { eng: "Weekend", amh: "የሳምንቱ መጨረሻ (ቅዳሜና እሁድ)" }, { eng: "Week / Month", amh: "ሳምንት / ወር" }
+                ]
+            },
+            kitchen: { amh: "ወጥ ቤት ዕቃዎች", eng: "Kitchen Tools", icon: "🍳", 
+                dialogue: [
+                    { speaker: "አባት (Father)", eng: "Where is the large knife? I need to slice the bread.", amh: "ትልቁ ቢላዋ የት አለ? ዳቦውን መቁረጥ ፈልጌ ነበር።", type: "A" },
+                    { speaker: "እናት (Mother)", eng: "It is in the drawer next to the spoons and forks.", amh: "ካቢኔው መሳቢያ ውስጥ ከማንኪያዎችና ሹካዎች አጠገብ ነው።", type: "B" },
+                    { speaker: "አባት (Father)", eng: "Found it. Pass me a clean plate and cup too, please.", amh: "አገኘሁት። እባክሽ ንፁህ ሳህንና ሲኒም አብረሽ ስጪኝ።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Plate / Bowl", amh: "ሳህን" }, { eng: "Spoon / Fork / Knife", amh: "ማንኪያ / ሹካ / ቢላዋ" },
+                    { eng: "Cup / Glass", amh: "ሲኒ / ብርጭቆ" }, { eng: "Pot / Pan", amh: "ድስት / መጥበሻ" },
+                    { eng: "Stove / Oven", amh: "ምድጃ / ማብሰያ" }, { eng: "Salt / Pepper", amh: "ጨው / ቁንዶ በርበሬ" }
+                ]
+            },
+            animals: { amh: "እንስሳት", eng: "Animals & Pets", icon: "🐕", 
+                dialogue: [
+                    { speaker: "ልጅ (Child)", eng: "Grandpa, your dog is jumping! He is very happy.", amh: "አያቴ፣ ውሻህ እየዘለለ ነው! በጣም ደስ ብሎታል።", type: "A" },
+                    { speaker: "አባት (Father)", eng: "Yes, he is a one-year-old golden retriever. He loves playing.", amh: "አዎ፣ የአንድ ዓመት ጎልደን ሪትሪቨር ነው። መጫወት በጣም ይወዳል።", type: "B" },
+                    { speaker: "ልጅ (Child)", eng: "Look, there is a small bird sitting on the tree branch.", amh: "እይ፣ ዛፉ ቅርንጫፍ ላይ አንድ ትንሽ ወፍ ተቀምጣለች።", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Dog / Cat", amh: "ውሻ / ድመት" }, { eng: "Golden Retriever", amh: "ጎልደን ሪትሪቨር" },
+                    { eng: "Bird / Chicken", amh: "ወፍ / ዶሮ" }, { eng: "Cow / Sheep", amh: "ላም / በግ" },
+                    { eng: "Horse", amh: "ፈረስ" }, { eng: "Animal / Pet", amh: "እንስሳ / የቤት እንስሳ" }
+                ]
+            },
+            conclusion: { amh: "ማጠቃለያ", eng: "Conclusion & Praise", icon: "🎓", 
+                dialogue: [
+                    { speaker: "እናት (Mother)", eng: "Congratulations! You completed all the courses!", amh: "እንኳን ደስ አለዎት! ሁሉንም ትምህርቶች ጨርሰዋል!", type: "A" },
+                    { speaker: "አባት (Father)", eng: "Thank you so much! I can speak and understand English now!", amh: "በጣም አመሰግናለሁ! አሁን እንግሊዝኛ መናገርም መረዳትም እችላለሁ!", type: "B" },
+                    { speaker: "ልጅ (Child)", eng: "Great job, Baba! We are proud of you!", amh: "ጎበዝ ባባ! እንኮራብሃለን!", type: "A" }
+                ],
+                vocab: [
+                    { eng: "Congratulations", amh: "እንኳን ደስ አለዎት" }, { eng: "Complete / Finished", amh: "የተጠናቀቀ / የጨረሰ" },
+                    { eng: "Speak / Talk", amh: "መናገር / ማውራት" }, { eng: "Understand", amh: "መረዳት / ማስተዋል" },
+                    { eng: "Proud", amh: "መኩራት / ኩራት" }, { eng: "Learn", amh: "መማር" }
+                ]
+            }
         };
 
         const stackContainer = document.getElementById("accordionStack");
-
-        // Loop through data and construct individual self-contained card drop boxes
         Object.keys(contentDatabase).forEach(key => {
             const item = contentDatabase[key];
-            
-            // Create overall module structural envelope
             const card = document.createElement("div");
             card.className = "module-card";
             card.id = `card-${key}`;
 
-            // Create clickable upper header assembly
             const header = document.createElement("div");
             header.className = "card-header";
             header.onclick = () => toggleCard(key);
@@ -246,71 +421,72 @@
                 <div class="chevron">▼</div>
             `;
 
-            // Create nested interior payload space
             const content = document.createElement("div");
             content.className = "card-content";
 
-            // Inject the data blocks directly inside this card's inner tray
-            if (item.mode === "dialogue") {
-                item.data.forEach(line => {
-                    const bubble = document.createElement("div");
-                    bubble.className = `bubble char-${line.type}`;
-                    bubble.innerHTML = `
-                        <span class="speaker">👤 ${line.speaker}</span>
-                        <span class="eng">${line.eng}</span>
-                        <span class="amh">${line.amh}</span>
-                        <span class="listen-hint">🔊 ለመስማት ይጫኑ (Tap to hear)</span>
-                    `;
-                    // Stops parent card from closing when hitting child voice bubbles
-                    bubble.onclick = (e) => { e.stopPropagation(); playAudio(line.eng); };
-                    content.appendChild(bubble);
-                });
-            } else {
-                item.data.forEach(word => {
-                    const row = document.createElement("div");
-                    row.className = "vocab-row";
-                    row.innerHTML = `
-                        <div>
-                            <span class="eng" style="font-size:19px; display:block; font-weight:bold;">${word.eng}</span>
-                            <span class="amh" style="font-size:15px; display:block; color:#555; margin-top:2px;">${word.amh}</span>
-                        </div>
-                        <div style="font-size:22px; color:#2980b9;">🔊</div>
-                    `;
-                    row.onclick = (e) => { e.stopPropagation(); playAudio(word.eng); };
-                    content.appendChild(row);
-                });
-            }
+            // 1. Add Dialogues section
+            const diagDivider = document.createElement("div");
+            diagDivider.className = "section-divider";
+            diagDivider.innerText = "🗣️ ንግግር (Dialogues)";
+            content.appendChild(diagDivider);
 
-            // Bind layout layers together
+            item.dialogue.forEach(line => {
+                const bubble = document.createElement("div");
+                bubble.className = `bubble char-${line.type}`;
+                bubble.innerHTML = `
+                    <span class="speaker">👤 ${line.speaker}</span>
+                    <span class="eng">${line.eng}</span>
+                    <span class="amh">${line.amh}</span>
+                    <span class="listen-hint">🔊 ለመስማት ይጫኑ (Tap to hear)</span>
+                `;
+                bubble.onclick = (e) => { e.stopPropagation(); playAudio(line.eng); };
+                content.appendChild(bubble);
+            });
+
+            // 2. Add Vocabulary section
+            const vocabDivider = document.createElement("div");
+            vocabDivider.className = "section-divider";
+            vocabDivider.innerText = "📖 ቃላት (Vocabulary)";
+            content.appendChild(vocabDivider);
+
+            const grid = document.createElement("div");
+            grid.className = "vocab-grid";
+
+            item.vocab.forEach(word => {
+                const row = document.createElement("div");
+                row.className = "vocab-row";
+                row.innerHTML = `
+                    <div>
+                        <span class="eng" style="font-size:18px; display:block; font-weight:bold;">${word.eng}</span>
+                        <span class="amh" style="font-size:14px; display:block; color:#555; margin-top:2px;">${word.amh}</span>
+                    </div>
+                    <div style="font-size:20px; color:#2980b9;">🔊</div>
+                `;
+                row.onclick = (e) => { e.stopPropagation(); playAudio(word.eng); };
+                grid.appendChild(row);
+            });
+
+            content.appendChild(grid);
             card.appendChild(header);
             card.appendChild(content);
             stackContainer.appendChild(card);
         });
 
-        // Controller method to toggle card collapse/expansion states natively
         function toggleCard(key) {
             const targetedCard = document.getElementById(`card-${key}`);
             const isCurrentlyActive = targetedCard.classList.contains("active");
-
-            // Close all open sections first for a clean scrolling layout experience
             document.querySelectorAll(".module-card").forEach(c => c.classList.remove("active"));
-
-            // If the card wasn't already open, open it
             if (!isCurrentlyActive) {
                 targetedCard.classList.add("active");
-                // Scroll the card smoothly into position
-                setTimeout(() => {
-                    targetedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }, 200);
+                setTimeout(() => { targetedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 200);
             }
         }
 
-        // Voice Engine 
         function playAudio(phrase) {
             window.speechSynthesis.cancel(); 
             let utterance = new SpeechSynthesisUtterance(phrase);
             utterance.lang = 'en-US';
-            utterance.rate = 0.70; 
+            utterance.rate = 0.68; 
             window.speechSynthesis.speak(utterance);
         }
     </script>
